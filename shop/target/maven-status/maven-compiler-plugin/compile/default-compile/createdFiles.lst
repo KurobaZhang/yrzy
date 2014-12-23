@@ -1,0 +1,5 @@
+my/yrzy/shop/model/Shop$Status.class
+my/yrzy/shop/model/Shop.class
+my/yrzy/shop/service/ShopService.class
+my/yrzy/shop/service/ShopServiceImpl.class
+my/yrzy/shop/dao/ShopDao.class

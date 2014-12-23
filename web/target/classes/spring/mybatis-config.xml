@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+  ~ Copyright (c) yangzefeng0428@gmail.com
+  -->
+
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+
+<configuration>
+    <typeAliases>
+        <typeAlias alias="Business" type="my.yrzy.business.model.Business"/>
+        <typeAlias alias="Shop" type="my.yrzy.shop.model.Shop"/>
+        <typeAlias alias="Order" type="my.yrzy.trade.model.Order"/>
+        <typeAlias alias="User" type="my.yrzy.user.model.User"/>
+    </typeAliases>
+</configuration>

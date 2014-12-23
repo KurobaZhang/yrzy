@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+  ~ Copyright (c) yangzefeng0428@gmail.com
+  -->
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="User">
+    <resultMap id="userMap" type="User">
+        <id property="id" column="id"/>
+        <result property="nickName" column="nick_name"/>
+        <result property="realName" column="real_name"/>
+        <result property="password" column="password"/>
+        <result property="phone" column="phone"/>
+        <result property="type" column="type"/>
+        <result property="status" column="status"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+    </resultMap>
+
+    <sql id="columns">
+        nick_name, real_name, password, phone, `type`, `status`, created_at, updated_at
+    </sql>
+
+    <sql id="values">
+        #{nickName}, #{realName}, #{password}, #{phone}, #{type}, #{status}, now(), now()
+    </sql>
+
+    <sql id="table">
+        yrzy_users
+    </sql>
+
+    <sql id="updateCondition">
+        <set>
+            updated_at = now(),
+            <if test="nickName != null">nick_name = #{nickName},</if>
+            <if test="phone != null">phone = #{phone},</if>
+            <if test="type != null">type = #{type},</if>
+            <if test="status != null">status = #{status}</if>
+        </set>
+    </sql>
+
+    <sql id="queryCondition">
+        <where>
+            <if test="phone != null">phone = #{phone}</if>
+            <if test="type != null">and `type` = #{type}</if>
+            <if test="status != null">and `status` = #{status}</if>
+            <if test="nickName != null">and nick_name = #{nickName}</if>
+            <if test="realName != null">and real_name = #{realName}</if>
+            <if test="id != null">and id = #{id}</if>
+        </where>
+    </sql>
+
+    <insert id="create" parameterType="User" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO <include refid="table"/>
+        (<include refid="columns"/>)
+        VALUES
+        (<include refid="values"/>)
+    </insert>
+
+    <update id="update" parameterType="User">
+        UPDATE <include refid="table"/>
+        <include refid="updateCondition"/>
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delete" parameterType="long">
+        DELETE FROM <include refid="table"/>
+        WHERE id = #{id}
+    </delete>
+
+    <select id="findById" parameterType="long" resultMap="userMap">
+        SELECT id, <include refid="columns"/>
+        FROM <include refid="table"/>
+        WHERE id = #{id}
+    </select>
+
+    <select id="findByName" parameterType="string" resultMap="userMap">
+        SELECT id, <include refid="columns"/>
+        FROM <include refid="table"/>
+        WHERE real_name = #{loginName}
+    </select>
+
+    <select id="findByMobile" parameterType="string" resultMap="userMap">
+        SELECT id, <include refid="columns"/>
+        FROM <include refid="table"/>
+        WHERE phone = #{phone}
+    </select>
+
+    <select id="count" parameterType="map" resultType="long">
+        SELECT COUNT(1) FROM<include refid="table"/>
+        <include refid="queryCondition"/>
+    </select>
+
+    <select id="find" parameterType="map" resultMap="userMap">
+        SELECT id, <include refid="columns"/>
+        FROM <include refid="table"/>
+        <include refid="queryCondition"/>
+        limit #{offset}, #{limit}
+    </select>
+
+    <select id="findByPhone" parameterType="string" resultMap="userMap">
+        SELECT id, <include refid="columns"/>
+        FROM <include refid="table"/>
+        WHERE phone = #{phone}
+    </select>
+</mapper>

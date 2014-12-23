@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+  ~ Copyright (c) yangzefeng0428@gmail.com
+  -->
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="Business">
+    <resultMap id="businessMap" type="Business">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="shopId" column="shop_id"/>
+        <result property="shopName" column="shop_name"/>
+        <result property="userName" column="user_name"/>
+        <result property="userId" column="user_id"/>
+        <result property="discountInfo" column="discount_info"/>
+        <result property="status" column="status"/>
+        <result property="mainImage" column="main_image"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+    </resultMap>
+
+    <sql id="columns">
+        `name`, shop_id, shop_name, user_name, user_id, discount_info, status, main_image, created_at, updated_at
+    </sql>
+
+    <sql id="values">
+        #{name}, #{shopId}, #{shopName}, #{userName}, #{userId}, #{discountInfo}, #{status}, #{mainImage}, now(), now()
+    </sql>
+
+    <sql id="table">
+        yrzy_business
+    </sql>
+
+    <sql id="updateCondition">
+        <set>
+            updated_at = now(),
+            <if test="discountInfo != null">discount_info = #{discountInfo},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="mainImage != null">main_image = #{mainIamge}</if>
+        </set>
+    </sql>
+
+    <sql id="queryCondition">
+        <where>
+            <if test="id != null">id = #{id}</if>
+            <if test="name != null">and `name` = #{name}</if>
+            <if test="shopId != null">and shop_id = #{shopId}</if>
+            <if test="userId != null">and user_id = #{userId}</if>
+            <if test="status != null">and status = #{status}</if>
+            <if test="shopName != null">and shop_name = #{shopName}</if>
+            <if test="userName != null">and user_name = #{userName}</if>
+        </where>
+    </sql>
+
+    <insert id="create" parameterType="Business" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO <include refid="table"/>
+        (<include refid="columns"/>)
+        VALUES
+        (<include refid="values"/>)
+    </insert>
+
+    <update id="update" parameterType="Business">
+        UPDATE <include refid="table"/>
+        <include refid="updateCondition"/>
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delete" parameterType="long">
+        DELETE FROM <include refid="table"/>
+        WHERE id = #{id}
+    </delete>
+
+    <select id="findById" parameterType="long" resultMap="businessMap">
+        SELECT id, <include refid="columns"/>
+        FROM <include refid="table"/>
+        WHERE id = #{id}
+    </select>
+
+    <select id="findByUserId" parameterType="long" resultMap="businessMap">
+        SELECT id, <include refid="columns"/>
+        FROM <include refid="table"/>
+        WHERE user_id = #{userId}
+    </select>
+
+    <select id="count" parameterType="map" resultType="long">
+        SELECT COUNT(1) FROM <include refid="table"/>
+        <include refid="queryCondition"/>
+    </select>
+
+    <select id="find" parameterType="map" resultMap="businessMap">
+        SELECT id, <include refid="columns"/>
+        FROM <include refid="table"/>
+        <include refid="queryCondition"/>
+        limit #{offset}, #{limit}
+    </select>
+</mapper>
