@@ -60,7 +60,7 @@ public class User implements Serializable {
     }
 
     public static enum Status {
-        FROZEN(-2, "已冻结"),
+        FROZEN(-1, "已冻结"),
         NOT_ACTIVATE(0, "未激活"),
         NORMAL(1, "正常");
 
